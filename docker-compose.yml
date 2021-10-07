@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+
+  db:
+    # image: mysql
+    # container_name: db_docker_symfony
+    # restart: always
+    # volumes:
+    #   - db-data:/var/lib/mysql
+    # environment:
+    #   MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    image: postgres:13-alpine
+    container_name: db_docker_symfony
+    restart: always
+    volumes:
+      - db-data:/var/lib/sql
+    environment:
+      POSTGRES_USER: oliver
+      POSTGRES_PASSWORD: oliver
+      POSTGRES_DB: oliver
+      # ports: [5432]
+      
+    networks:
+      - dev
+
+  # phpmyadmin:
+  admin:
+    # image: phpmyadmin
+    image: adminer
+    # container_name: phpmyadmin_docker_symfony
+    # container_name: adminer_docker_symfony
+    # restart: always
+    depends_on:
+      - db
+    ports:
+      - 8888:80
+    # environment:
+    #   PMA_HOST: db
+    networks:
+      - dev
+
+  maildev:
+    image: maildev/maildev
+    container_name: maildev_docker_symfony
+    command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
+    ports:
+      - "8081:80"
+    restart: always
+    networks:
+      - dev
+
+  www:
+    build: php
+    container_name: docker_symfony_php_apache
+    ports:
+      - "8741:80"
+    volumes:
+      - ./php/vhosts:/etc/apache2/sites-enabled
+      - ./:/var/www
+    restart: always
+    networks:
+      - dev
+
+networks:
+  dev:
+
+volumes:
+  db-data:
