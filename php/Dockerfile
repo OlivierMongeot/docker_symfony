@@ -22,6 +22,5 @@ RUN docker-php-ext-install dom mbstring zip gd xsl
 
 RUN pecl install apcu && docker-php-ext-enable apcu
 
-RUN docker-php-ext-install pdo_pgsql pgsql
 
 WORKDIR /var/www/
