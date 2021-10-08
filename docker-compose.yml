@@ -3,13 +3,7 @@ version: "3.8"
 services:
 
   db:
-    # image: mysql
-    # container_name: db_docker_symfony
-    # restart: always
-    # volumes:
-    #   - db-data:/var/lib/mysql
-    # environment:
-    #   MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+   
     image: postgres:13-alpine
     container_name: db_docker_symfony
     restart: always
@@ -24,19 +18,20 @@ services:
     networks:
       - dev
 
-  # phpmyadmin:
-  admin:
-    # image: phpmyadmin
-    image: adminer
-    # container_name: phpmyadmin_docker_symfony
-    # container_name: adminer_docker_symfony
-    # restart: always
+  adminer:
+    image: michalhosna/adminer
+    container_name: adminer_docker_symfony
+    restart: always
     depends_on:
       - db
     ports:
-      - 8888:80
-    # environment:
-    #   PMA_HOST: db
+      - 8080:8080
+    environment:
+            ADMINER_DB: oliver
+            ADMINER_PASSWORD: oliver
+            ADMINER_SERVER: db_docker_symfony
+            ADMINER_USERNAME: oliver
+    
     networks:
       - dev
 
